@@ -25,6 +25,13 @@ jobs:
         with:
           node-version: '18'
 
+      - name: Install HTMLHint
+        run: npm install -g htmlhint
+
+      - name: Run HTML Linter
+        run: htmlhint "**/*.html"
+
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
