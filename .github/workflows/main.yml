@@ -8,6 +8,11 @@ on:
     branches:
       - main
 
+  workflow_run:
+    workflows: ["pages-build-deployment"]
+    types:
+      - completed
+
 jobs:
   test-and-deploy:
     runs-on: ubuntu-latest
