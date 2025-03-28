@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - ScheduleSooner</title>
+    <link rel="stylesheet" href="dbstyle.css">
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo">ScheduleSooner</a>
+    </header>
+    
+    <div class="dashboard-container">
+        <div class="created-schedules">
+            <h2>Schedules</h2>
+            <div id="scheduleList"></div>
+        </div>
+
+        <div class="schedule-library">
+            <h2>Schedule Library</h2>
+            <button class="category-btn" onclick="displaySchedules('favorites')">Favorites</button>
+            <button class="category-btn" onclick="displaySchedules('created')">Created</button>
+            <div id="customCategories"></div>
+            <button id="createCategoryBtn">+ Create Custom Category</button>
+        </div>
+    </div>
+
+    <!-- Preview Modal -->
+    <div id="previewPopup" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closePreview()">&times;</span>
+            <h2 id="previewTitle"></h2>
+            <img id="previewImage" src="" alt="">
+            <p id="previewDetails"></p>
+        </div>
+    </div>
+
+    <!-- Category Creation Popup -->
+    <div id="categoryPopup" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeCategoryPopup()">&times;</span>
+            <h2>Create Custom Category</h2>
+            <input type="text" id="categoryName" placeholder="Enter category name">
+            <button id="saveCategoryBtn">Save</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    
+    <script src="categoryTests.js"></script>
+
+</body>
+</html>
