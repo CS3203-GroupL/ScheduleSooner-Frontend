@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
             { name: "Schedule 2", img: "thumbnail2.png", details: "Details about Schedule 2" }
         ],
         created: [
-            { name: "Schedule A", img: "thumbnail3.png", details: "Details about Schedule A" }
+            { name: "Schedule A", img: "thumbnail3.pngs", details: "Details about Schedule A" }
         ]
     };
 

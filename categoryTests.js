@@ -104,3 +104,5 @@ function runCategoryTests(schedules) {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = runCategoryTests;
 }
+
+runCategoryTests({});
