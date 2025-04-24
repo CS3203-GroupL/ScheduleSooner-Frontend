@@ -1,0 +1,112 @@
+/* CSS STYLING FOR signedinpage.html */
+body {
+    font-family: Arial, sans-serif;
+    background: #f3f4f6;
+    margin: 0;
+    padding: 20px;
+  }
+  
+  /* Style main container */
+  .container {
+    max-width: 800px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  
+  /* Center the header text and style the FAQ button */
+  header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  header button {
+    background-color: #5e2219;
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  /* Style for form label */
+  main label {
+    font-weight: bold;
+  }
+  
+  /* Style the text input */
+  input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+  
+  /* Style Generate Button */
+  #generateBtn {
+    background-color: #a00707;
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  /* Style for AI suggestion text */
+  .suggestion-text {
+    font-style: italic;
+    color: #374151;
+    margin: 15px 0;
+  }
+  
+  /* Remove default list styles from the schedule list */
+  #scheduleViewer ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  /* Style each schedule item */
+  #scheduleViewer li {
+    background: #f9fafb;
+    border: 1px solid #d1d5db;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+  }
+  
+  /* Style for modal */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 99;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+  }
+  
+  /* Style the modal content box */
+  .modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    width: 80%;
+    max-width: 500px;
+    border-radius: 8px;
+    position: relative;
+  }
+  
+  /* Style the close (×) button */
+  .close {
+    position: absolute;
+    top: 10px;
+    right: 16px;
+    font-size: 24px;
+    cursor: pointer;
+  }
