@@ -110,3 +110,52 @@ body {
     font-size: 24px;
     cursor: pointer;
   }
+
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Sidebar styling */
+  .sidebar {
+    color: white;
+    position: fixed;
+    top: 0;
+    right: -300px;
+    width: 300px;
+    height: 100vh;
+    background: #a00707;
+    box-shadow: -2px 0 5px rgba(0,0,0,0.3);
+    transition: right 0.3s ease;
+    padding: 20px;
+    overflow-y: auto;
+    z-index: 1000;
+  }
+  
+  /* When open */
+  .sidebar.open {
+    right: 0;
+  }
+  
+  /* Toggle button styling */
+  .toggle-btn {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px 0 0 5px;
+    cursor: pointer;
+    z-index: 1100;
+    transition: background-color 0.3s;
+  }
+  
+  .toggle-btn:hover {
+    background-color: #0056b3;
+  }
+ 
+  
+  
