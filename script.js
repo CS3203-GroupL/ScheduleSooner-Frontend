@@ -1,21 +1,60 @@
 //JAVASCRIPT FOR SCHEDULE GENERATOR PAGE
 
 // Creates a schedule list in the #scheduleList element
+// Create schedule list
 function createSchedule(schedule) {
-  const scheduleList = document.getElementById('scheduleList'); // Get the <ul> element
-  scheduleList.innerHTML = ''; // Clear previous schedule entries
+  const scheduleList = document.getElementById('scheduleList');
+  scheduleList.innerHTML = '';
 
-  // Loop through each class in the schedule and add it to the list
   schedule.forEach(item => {
-    const li = document.createElement('li'); // Create a new list item
+    const li = document.createElement('li');
     li.innerHTML = `
       <strong>${item.course} - ${item.professor}</strong><br>
       ${item.days} • ${item.time}<br>
-      📍 ${item.location}
+      📍 ${item.location}<br>
+      <button class="save-btn">Save</button>
     `;
-    scheduleList.appendChild(li); // Add the list item to the <ul>
+    li.querySelector('.save-btn').addEventListener('click', () => {
+      saveClass(item);
+    });
+
+    scheduleList.appendChild(li);
   });
 }
+
+
+// Sidebar toggle logic
+// Sidebar and toggle button
+// Sidebar toggle logic
+const sidebar = document.getElementById('savedSidebar');
+const toggleBtn = document.getElementById('toggleSavedBtn');
+
+// Toggle sidebar open/close
+toggleBtn.addEventListener('click', () => {
+  sidebar.classList.toggle('open');
+  
+  // Update arrow direction
+  if (sidebar.classList.contains('open')) {
+    toggleBtn.textContent = '◀';
+    toggleBtn.style.right = '300px'; // Move with sidebar
+  } else {
+    toggleBtn.textContent = '▶';
+    toggleBtn.style.right = '0';
+  }
+});
+
+// Save a clicked class into sidebar
+function saveClass(item) {
+  const savedList = document.getElementById('savedList');
+  const savedItem = document.createElement('li');
+  savedItem.innerHTML = `
+    <strong>${item.course} - ${item.professor}</strong><br>
+    ${item.days} • ${item.time}<br>
+    📍 ${item.location}
+  `;
+  savedList.appendChild(savedItem);
+}
+
 
 // Hardcoded example schedule for demo
 const mockSchedule = [
