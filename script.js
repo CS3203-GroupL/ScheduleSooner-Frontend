@@ -82,6 +82,52 @@ const mockSchedule = [
       { course: 'CHEM 1314', days: 'MWF', time: '10:00AM - 10:50AM', location: 'Physical Science Center 101', professor: 'Dr. Lee' },
     ];
 
+    //Plan B- Hardcoded Backup Schedules 
+    //If user prefers morning classes, use this schedule
+    const morningSchedule = [
+      {course: 'MATH 2413', days: 'MWF', time: '9:00AM - 9:50AM', location: 'Felgar Hall 300', professor: 'Dr. White' },
+      { course: 'ENGL 1213', days: 'MWF', time: '10:00AM - 10:50AM', location: 'Dale Hall 101', professor: 'Dr. Smith' },
+      { course: 'CS 3203', days: 'T/TH', time: '10:00AM - 10:15AM', location: 'Gallogly Hall 127', professor: 'Dr. Abdulhak' },
+      { course: 'HIST 1483', days: 'T/TH', time: '10:30AM - 11:45AM', location: 'Gould Hall 101', professor: 'Dr. Johnson' },
+      { course: 'CHEM 1314', days: 'MWF', time: '11:00AM - 11:50AM', location: 'Physical Science Center 101', professor: 'Dr. Lee' }
+    ]
+
+    //If user prefers afternoon classes, use this schedule
+    const afternoonSchedule = [
+      { course: 'MATH 2413', days: 'MWF', time: '1:00PM - 1:50PM', location: 'Felgar Hall 300', professor: 'Dr. White' },
+      { course: 'ENGL 1213', days: 'MWF', time: '2:00PM - 2:50PM', location: 'Dale Hall 101', professor: 'Dr. Smith' },
+      { course: 'CS 3203', days: 'T/TH', time: '3:00PM - 4:15PM', location: 'Gallogly Hall 127', professor: 'Dr. Abdulhak' },
+      { course: 'HIST 1483', days: 'T/TH', time: '4:30PM - 5:45PM', location: 'Gould Hall 101', professor: 'Dr. Johnson' },
+      { course: 'CHEM 1314', days: 'MWF', time: '6:00PM - 6:50PM', location: 'Physical Science Center 101', professor: 'Dr. Lee' }
+    ]
+
+    //If user prefers MWF classes, use this schedule
+    const mwfSchedule = [
+      { course: 'MATH 2413', days: 'MWF', time: '9:00AM - 9:50AM', location: 'Felgar Hall 300', professor: 'Dr. White' },
+      { course: 'ENGL 1213', days: 'MWF', time: '10:00AM - 10:50AM', location: 'Dale Hall 101', professor: 'Dr. Smith' },
+      { course: 'CS 3203', days: 'MWF', time: '11:00AM - 11:50AM', location: 'Gallogly Hall 127', professor: 'Dr. Abdulhak' },
+      { course: 'HIST 1483', days: 'MWF', time: '1:00PM - 1:50PM', location: 'Gould Hall 101', professor: 'Dr. Johnson' },
+      { course: 'CHEM 1314', days: 'MWF', time: '2:00PM - 2:50PM', location: 'Physical Science Center 101', professor: 'Dr. Lee' }
+    ]
+
+    //If user prefers T/TH classes, use this schedule
+    const tthSchedule = [
+      { course: 'MATH 2413', days: 'T/TH', time: '9:00AM - 9:50AM', location: 'Felgar Hall 300', professor: 'Dr. White' },
+      { course: 'ENGL 1213', days: 'T/TH', time: '10:00AM - 10:50AM', location: 'Dale Hall 101', professor: 'Dr. Smith' },
+      { course: 'CS 3203', days: 'T/TH', time: '11:00AM - 11:50AM', location: 'Gallogly Hall 127', professor: 'Dr. Abdulhak' },
+      { course: 'HIST 1483', days: 'T/TH', time: '1:00PM - 1:50PM', location: 'Gould Hall 101', professor: 'Dr. Johnson' },
+      { course: 'CHEM 1314', days: 'T/TH', time: '2:00PM - 2:50PM', location: 'Physical Science Center 101', professor: 'Dr. Lee' }
+    ]
+
+    //If user wants Dr. Abdulhak for every class, use this schedule
+    const drAbdulhakSchedule = [
+      { course: 'MATH 2413', days: 'MWF', time: '9:00AM - 9:50AM', location: 'Felgar Hall 300', professor: 'Dr. Abdulhak' },
+      { course: 'ENGL 1213', days: 'MWF', time: '10:00AM - 10:50AM', location: 'Dale Hall 101', professor: 'Dr. Abdulhak' },
+      { course: 'CS 3203', days: 'T/TH', time: '11:00AM - 12:15PM', location: 'Gallogly Hall 127', professor: 'Dr. Abdulhak' },
+      { course: 'HIST 1483', days: 'T/TH', time: '1:00PM - 2:15PM', location: 'Gould Hall 101', professor: 'Dr. Abdulhak' },
+      { course: 'CHEM 1314', days: 'MWF', time: '2:30PM - 3:20PM', location: 'Physical Science Center 101', professor: 'Dr. Abdulhak' }
+    ]
+
 // When the "Generate Schedule" button is clicked:
 document.getElementById('generateBtn').addEventListener('click', () => {
   const input = document.getElementById('preferences').value; // Get user input
@@ -100,11 +146,38 @@ document.getElementById('generateBtn').addEventListener('click', () => {
   */
 
   //TO-DO: backend logic, use user input to prompt AI to generate a schedule
-  //const generatedSchedule = [];
-  //createSchedule(generatedSchedule);
 
   //For demo, we can use hardcoded example?
-  createSchedule(mockSchedule); 
+
+  //if user input is any variation of "morning" or "mornings", use morningSchedule
+  if (input.toLowerCase().includes('morning') || input.toLowerCase().includes('mornings')) {
+    createSchedule(morningSchedule);
+  }
+
+  //if user input is any variation of "afternoon" or "afternoons", use afternoonSchedule
+  else if (input.toLowerCase().includes('afternoon') || input.toLowerCase().includes('afternoons')) {
+    createSchedule(afternoonSchedule);
+  }
+
+  //if user input is any variation of "MWF" or "MWF classes", use mwfSchedule
+  else if (input.toLowerCase().includes('MWF') || input.toLowerCase().includes('MWF classes')) {
+    createSchedule(mwfSchedule);
+  }
+
+  //if user input is any variation of "T/TH" or "T/TH classes", use tthSchedule
+  else if (input.toLowerCase().includes('T/TH') || input.toLowerCase().includes('T/TH classes')) {
+    createSchedule(tthSchedule);
+  }
+
+  //if user input contains "Abdulhak" or "Mansoor" or "Dr. Abdulhak", use drAbdulhakSchedule
+  else if (input.toLowerCase().includes('Abdulhak') || input.toLowerCase().includes('Mansoor') || input.toLowerCase().includes('Dr. Abdulhak')) {
+    createSchedule(drAbdulhakSchedule);
+  }
+
+  //if user input is any variation of "random" or "random classes", use randomSchedule
+  else {
+    createSchedule(mockSchedule); 
+  }
 });
 
 // FAQ modal functionality
