@@ -131,7 +131,8 @@ const mockSchedule = [
 // When the "Generate Schedule" button is clicked:
 document.getElementById('generateBtn').addEventListener('click', () => {
   const input = document.getElementById('preferences').value; // Get user input
-
+  const lowerInput = input.toLowerCase(); // Convert input to lowercase for case-insensitive comparison
+  
   // CWE-1287: Improper Validation of Specified Type of Input Fix
   document.getElementById('suggestion').textContent = `Suggested based on: "${input}"`; 
   /* 
@@ -150,27 +151,27 @@ document.getElementById('generateBtn').addEventListener('click', () => {
   //For demo, we can use hardcoded example?
 
   //if user input is any variation of "morning" or "mornings", use morningSchedule
-  if (input.toLowerCase().includes('morning') || input.toLowerCase().includes('mornings')) {
+  if (lowerInput.includes('morning') || lowerInput.includes('mornings')) {
     createSchedule(morningSchedule);
   }
 
   //if user input is any variation of "afternoon" or "afternoons", use afternoonSchedule
-  else if (input.toLowerCase().includes('afternoon') || input.toLowerCase().includes('afternoons')) {
+  else if (lowerInput.includes('afternoon') || lowerInput.includes('afternoons')) {
     createSchedule(afternoonSchedule);
   }
 
   //if user input is any variation of "MWF" or "MWF classes", use mwfSchedule
-  else if (input.toLowerCase().includes('mwf') || input.toLowerCase().includes('mwf classes')) {
+  else if (lowerInput.includes('mwf')) {
     createSchedule(mwfSchedule);
   }
 
   //if user input is any variation of "T/TH" or "T/TH classes", use tthSchedule
-  else if (input.toLowerCase().includes('t/th') || input.toLowerCase().includes('t/th classes')) {
+  else if (lowerInput.includes('t/th')) {
     createSchedule(tthSchedule);
   }
 
   //if user input contains "Abdulhak" or "Mansoor" or "Dr. Abdulhak", use drAbdulhakSchedule
-  else if (input.toLowerCase().includes('abdulhak') || input.toLowerCase().includes('mansoor') || input.toLowerCase().includes('dr. abdulhak')) {
+  else if (lowerInput.includes('abdulhak') || lowerInput.includes('mansoor')) {
     createSchedule(drAbdulhakSchedule);
   }
 
