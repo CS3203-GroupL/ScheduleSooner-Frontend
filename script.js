@@ -90,7 +90,7 @@ const mockSchedule = [
       { course: 'CS 3203', days: 'T/TH', time: '10:00AM - 10:15AM', location: 'Gallogly Hall 127', professor: 'Dr. Abdulhak' },
       { course: 'HIST 1483', days: 'T/TH', time: '10:30AM - 11:45AM', location: 'Gould Hall 101', professor: 'Dr. Johnson' },
       { course: 'CHEM 1314', days: 'MWF', time: '11:00AM - 11:50AM', location: 'Physical Science Center 101', professor: 'Dr. Lee' }
-    ]
+    ];
 
     //If user prefers afternoon classes, use this schedule
     const afternoonSchedule = [
@@ -99,7 +99,7 @@ const mockSchedule = [
       { course: 'CS 3203', days: 'T/TH', time: '3:00PM - 4:15PM', location: 'Gallogly Hall 127', professor: 'Dr. Abdulhak' },
       { course: 'HIST 1483', days: 'T/TH', time: '4:30PM - 5:45PM', location: 'Gould Hall 101', professor: 'Dr. Johnson' },
       { course: 'CHEM 1314', days: 'MWF', time: '6:00PM - 6:50PM', location: 'Physical Science Center 101', professor: 'Dr. Lee' }
-    ]
+    ];
 
     //If user prefers MWF classes, use this schedule
     const mwfSchedule = [
@@ -108,7 +108,7 @@ const mockSchedule = [
       { course: 'CS 3203', days: 'MWF', time: '11:00AM - 11:50AM', location: 'Gallogly Hall 127', professor: 'Dr. Abdulhak' },
       { course: 'HIST 1483', days: 'MWF', time: '1:00PM - 1:50PM', location: 'Gould Hall 101', professor: 'Dr. Johnson' },
       { course: 'CHEM 1314', days: 'MWF', time: '2:00PM - 2:50PM', location: 'Physical Science Center 101', professor: 'Dr. Lee' }
-    ]
+    ];
 
     //If user prefers T/TH classes, use this schedule
     const tthSchedule = [
@@ -117,7 +117,7 @@ const mockSchedule = [
       { course: 'CS 3203', days: 'T/TH', time: '11:00AM - 11:50AM', location: 'Gallogly Hall 127', professor: 'Dr. Abdulhak' },
       { course: 'HIST 1483', days: 'T/TH', time: '1:00PM - 1:50PM', location: 'Gould Hall 101', professor: 'Dr. Johnson' },
       { course: 'CHEM 1314', days: 'T/TH', time: '2:00PM - 2:50PM', location: 'Physical Science Center 101', professor: 'Dr. Lee' }
-    ]
+    ];
 
     //If user wants Dr. Abdulhak for every class, use this schedule
     const drAbdulhakSchedule = [
@@ -126,7 +126,7 @@ const mockSchedule = [
       { course: 'CS 3203', days: 'T/TH', time: '11:00AM - 12:15PM', location: 'Gallogly Hall 127', professor: 'Dr. Abdulhak' },
       { course: 'HIST 1483', days: 'T/TH', time: '1:00PM - 2:15PM', location: 'Gould Hall 101', professor: 'Dr. Abdulhak' },
       { course: 'CHEM 1314', days: 'MWF', time: '2:30PM - 3:20PM', location: 'Physical Science Center 101', professor: 'Dr. Abdulhak' }
-    ]
+    ];
 
 // When the "Generate Schedule" button is clicked:
 document.getElementById('generateBtn').addEventListener('click', () => {
