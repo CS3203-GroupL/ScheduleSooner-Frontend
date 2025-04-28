@@ -49,7 +49,7 @@
       width: 100%;
       padding: 10px;
       margin: 10px 0;
-      border: 1px #990000;
+      border: 1px solid #990000;
       background: #E1D9D1;
       border-radius: 5px;
     }
@@ -86,7 +86,6 @@
         <input type="text" id="username" placeholder="OU 4x4">
         <input type="password" id="password" placeholder="Password">
         <button onclick="checkLogin()">Sign in</button>
-        <!-- error message placeholder -->
         <p id="error-msg" class="error"></p>
       </div>
     </div>
@@ -96,22 +95,45 @@
   </div>
 
   <script>
-    function checkLogin() {
+    async function checkLogin() {
+      //grab text from input fields
       const username = document.getElementById("username").value.trim();
       const password = document.getElementById("password").value.trim();
       const errorMsg = document.getElementById("error-msg");
-
-      // Hardcoded credentials as an example
-      const validUsername = "ouuser";
-      const validPassword = "password123";
-
-      if (username === validUsername && password === validPassword) {
-        window.location.href = "scheduleCreation.html";
-      } else {
-        errorMsg.textContent = "Invalid username or password. Please try again.";
+  
+      try {
+        //send post request
+        const response = await fetch('https://schedulesooner-backend.onrender.com/api/login/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json' 
+          },
+          //turn input into json to send
+          body: JSON.stringify({
+            username: username,
+            password: password
+          })
+        });
+        //send to sign in if login is ok
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Login successful:', data);
+  
+          window.location.href = "signedinpage.html";
+        } else {
+          const errorData = await response.json();
+          console.error('Login failed:', errorData);
+  
+          
+          errorMsg.textContent = errorData.detail || "Invalid username or password. Please try again.";
+        }
+      } catch (error) {
+        console.error('Error during login:', error);
+        errorMsg.textContent = "An error occurred. Please try again later.";
       }
     }
   </script>
+  
 </body>
 </html>
-
