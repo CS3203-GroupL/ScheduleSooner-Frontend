@@ -160,17 +160,17 @@ document.getElementById('generateBtn').addEventListener('click', () => {
   }
 
   //if user input is any variation of "MWF" or "MWF classes", use mwfSchedule
-  else if (input.toLowerCase().includes('MWF') || input.toLowerCase().includes('MWF classes')) {
+  else if (input.toLowerCase().includes('mwf') || input.toLowerCase().includes('mwf classes')) {
     createSchedule(mwfSchedule);
   }
 
   //if user input is any variation of "T/TH" or "T/TH classes", use tthSchedule
-  else if (input.toLowerCase().includes('T/TH') || input.toLowerCase().includes('T/TH classes')) {
+  else if (input.toLowerCase().includes('t/th') || input.toLowerCase().includes('t/th classes')) {
     createSchedule(tthSchedule);
   }
 
   //if user input contains "Abdulhak" or "Mansoor" or "Dr. Abdulhak", use drAbdulhakSchedule
-  else if (input.toLowerCase().includes('Abdulhak') || input.toLowerCase().includes('Mansoor') || input.toLowerCase().includes('Dr. Abdulhak')) {
+  else if (input.toLowerCase().includes('abdulhak') || input.toLowerCase().includes('mansoor') || input.toLowerCase().includes('dr. abdulhak')) {
     createSchedule(drAbdulhakSchedule);
   }
 
