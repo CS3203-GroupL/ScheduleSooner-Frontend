@@ -34,14 +34,14 @@ toggleBtn.addEventListener('click', () => {
   
   // Update arrow direction
   if (sidebar.classList.contains('open')) {
-    toggleBtn.textContent = '◀';
-    toggleBtn.style.right = '300px'; // Move with sidebar
-  } else {
     toggleBtn.textContent = '▶';
+    toggleBtn.style.right = '330px'; // Move with sidebar
+  } else {
+    toggleBtn.textContent = '◀';
     toggleBtn.style.right = '0';
   }
 });
-
+//◀ ▶
 // Save a clicked class into sidebar
 function saveClass(item) {
   const savedList = document.getElementById('savedList');
