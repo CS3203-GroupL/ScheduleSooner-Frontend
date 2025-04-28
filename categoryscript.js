@@ -1,20 +1,17 @@
 document.addEventListener("DOMContentLoaded", function () {
     const sidebar = document.getElementById("savedSidebar");
     const savedList = sidebar.querySelector("#savedList");
-    const scheduleList = sidebar.querySelector("#scheduleList");
+    const scheduleList = sidebar.querySelector("#savedScheduleList");
     const customCategoriesContainer = sidebar.querySelector("#customCategories");
 
-    // All schedules
     window.schedules = {
         favorites: [],
         created: []
     };
 
     window.customCategories = [];
-
     let activeCategory = "created";
 
-    // Create a basic popup div (hidden at first)
     const previewPopup = document.createElement("div");
     previewPopup.id = "previewPopup";
     previewPopup.style.display = "none";
@@ -29,12 +26,10 @@ document.addEventListener("DOMContentLoaded", function () {
     previewPopup.style.zIndex = "1000";
     document.body.appendChild(previewPopup);
 
-    // Close popup when clicking outside
     previewPopup.addEventListener("click", function () {
         previewPopup.style.display = "none";
     });
 
-    // Display all schedules
     window.displaySchedules = function (category) {
         activeCategory = category;
         scheduleList.innerHTML = "";
@@ -44,7 +39,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 const div = document.createElement("div");
                 div.classList.add("schedule-item");
                 div.style.marginBottom = "10px";
-
                 div.innerHTML = `
                     <p class="schedule-name" style="cursor: pointer; text-decoration: underline;" onclick="openPreview('${schedule.name}')">${schedule.name}</p>
                     <button onclick="editSchedule(${index}, '${category}')">Edit</button>
@@ -55,7 +49,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     };
 
-    // Open preview popup
     window.openPreview = function (title) {
         previewPopup.innerHTML = `
             <h2>${title}</h2>
@@ -69,7 +62,6 @@ document.addEventListener("DOMContentLoaded", function () {
         previewPopup.style.display = "none";
     };
 
-    // Edit a schedule
     window.editSchedule = function (index, category) {
         const newName = prompt("Edit schedule name:", schedules[category][index].name);
         if (newName) {
@@ -78,7 +70,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     };
 
-    // Delete a schedule
     window.deleteSchedule = function (index, category) {
         if (confirm("Are you sure you want to delete this schedule?")) {
             schedules[category].splice(index, 1);
@@ -86,98 +77,88 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     };
 
+    // Save a new schedule
+    document.getElementById("saveScheduleBtn").addEventListener("click", function () {
+        const existingPopup = document.getElementById("customPopup");
+        if (existingPopup) {
+            existingPopup.remove();
+        }
 
-// Save a new schedule
-document.getElementById("saveScheduleBtn").addEventListener("click", function () {
-    // Create a custom popup for entering the schedule name
-    const customPopup = document.createElement("div");
-    customPopup.id = "customPopup";
-    customPopup.style.position = "fixed";
-    customPopup.style.top = "50%";
-    customPopup.style.left = "50%";
-    customPopup.style.transform = "translate(-50%, -50%)";
-    customPopup.style.backgroundColor = "white";
-    customPopup.style.padding = "20px";
-    customPopup.style.border = "1px solid #ccc";
-    customPopup.style.boxShadow = "0 0 10px rgba(0,0,0,0.5)";
-    customPopup.style.zIndex = "1000";
+        const customPopup = document.createElement("div");
+        customPopup.id = "customPopup";
+        customPopup.style.position = "fixed";
+        customPopup.style.top = "50%";
+        customPopup.style.left = "50%";
+        customPopup.style.transform = "translate(-50%, -50%)";
+        customPopup.style.backgroundColor = "white";
+        customPopup.style.padding = "20px";
+        customPopup.style.border = "1px solid #ccc";
+        customPopup.style.boxShadow = "0 0 10px rgba(0,0,0,0.5)";
+        customPopup.style.zIndex = "1000";
 
-    customPopup.innerHTML = `
-        <h2>Enter Schedule Name</h2>
-        <input type="text" id="scheduleNameInput" placeholder="Enter schedule name" />
-        <p>Add to Category?</p>
-        <select id="categoryDropdown">
-            <option value="created"></option>  <!-- Default value set -->
-            <option value="favorites">Favorites</option>
-            ${customCategories.map(category => `<option value="${category}">${category}</option>`).join('')}
-        </select>
-        <br><br>
-        <button id="saveScheduleInCategoryBtn">Save Schedule</button>
-        <button id="closePopupBtn">Cancel</button>
-    `;
+        customPopup.innerHTML = `
+            <h2>Enter Schedule Name</h2>
+            <input type="text" id="scheduleNameInput" placeholder="Enter schedule name" />
+            <p>Add to Category?</p>
+            <select id="categoryDropdown">
+                <option value="created"></option>
+                <option value="favorites">Favorites</option>
+                ${customCategories.map(category => `<option value="${category}">${category}</option>`).join('')}
+            </select>
+            <br><br>
+            <button id="saveScheduleInCategoryBtn">Save Schedule</button>
+            <button id="closePopupBtn">Cancel</button>
+        `;
 
-    // Append the popup to the body
-    document.body.appendChild(customPopup);
+        document.body.appendChild(customPopup);
 
-    // Close the custom popup
-    document.getElementById("closePopupBtn").addEventListener("click", function () {
-        customPopup.style.display = "none";
+        document.getElementById("closePopupBtn").addEventListener("click", function () {
+            customPopup.style.display = "none";
+        });
+
+        document.getElementById("saveScheduleInCategoryBtn").addEventListener("click", function () {
+            const scheduleName = document.getElementById("scheduleNameInput").value.trim();
+            const selectedCategory = document.getElementById("categoryDropdown").value;
+
+            if (scheduleName && scheduleName !== "") {
+                if (schedules[selectedCategory]) {
+                    schedules[selectedCategory].push({ name: scheduleName });
+
+                    // Refresh the relevant category sections
+                    displaySchedules('saved');
+                    displaySchedules('favorites');
+                    displaySchedules(selectedCategory);
+
+                    customPopup.style.display = "none";
+                } else {
+                    alert("Invalid category selected.");
+                }
+            } else {
+                alert("Schedule name cannot be empty.");
+            }
+        });
     });
 
-    // Save the schedule when clicking "Save Schedule"
-    document.getElementById("saveScheduleInCategoryBtn").addEventListener("click", function () {
-        const scheduleName = document.getElementById("scheduleNameInput").value.trim();
-        const selectedCategory = document.getElementById("categoryDropdown").value;
+    document.getElementById("createCategoryBtn").addEventListener("click", function () {
+        const newCategoryName = prompt("Enter a name for the new custom category:");
 
-        if (scheduleName && scheduleName !== "") {
-            // Save the schedule to the selected category
-            if (schedules[selectedCategory]) {
-                schedules[selectedCategory].push({ name: scheduleName });
-                
-                // Always display in both Saved and Favorites sections if Favorites is selected
-                if (selectedCategory === 'favorites') {
-                    displaySchedules('saved');    // Refresh Saved
-                    displaySchedules('favorites'); // Refresh Favorites
-                } else {
-                    displaySchedules(selectedCategory); // Only refresh the selected category
-                }
+        if (newCategoryName && newCategoryName.trim() !== "") {
+            const trimmedName = newCategoryName.trim();
+            customCategories.push(trimmedName);
 
-                customPopup.style.display = "none"; // Close the popup
-            } else {
-                alert("Invalid category selected.");
-            }
+            const categoryDropdown = document.getElementById("categoryDropdown");
+            const newOption = document.createElement("option");
+            newOption.value = trimmedName;
+            newOption.textContent = trimmedName;
+            categoryDropdown.appendChild(newOption);
+
+            const newHeading = document.createElement("h2");
+            newHeading.textContent = trimmedName;
+            customCategoriesContainer.appendChild(newHeading);
         } else {
-            alert("Schedule name cannot be empty.");
+            alert("Category name cannot be empty.");
         }
     });
-});
 
-// Create a new custom category
-document.getElementById("createCategoryBtn").addEventListener("click", function () {
-    const newCategoryName = prompt("Enter a name for the new custom category:");
-
-    if (newCategoryName && newCategoryName.trim() !== "") {
-        const trimmedName = newCategoryName.trim();
-        customCategories.push(trimmedName);
-
-        // Add the new category to the dropdown dynamically
-        const categoryDropdown = document.getElementById("categoryDropdown");
-        const newOption = document.createElement("option");
-        newOption.value = trimmedName;
-        newOption.textContent = trimmedName;
-        categoryDropdown.appendChild(newOption);
-
-        // Create a new section in the HTML for the new category if needed
-        const newHeading = document.createElement("h2");
-        newHeading.textContent = trimmedName;
-        customCategoriesContainer.appendChild(newHeading);
-    } else {
-        alert("Category name cannot be empty.");
-    }
-});
-
-
-
-    // Initial display
     displaySchedules("created");
 });
