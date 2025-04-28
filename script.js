@@ -22,7 +22,6 @@ function createSchedule(schedule) {
   });
 }
 
-
 // Sidebar toggle logic
 // Sidebar and toggle button
 // Sidebar toggle logic
@@ -52,7 +51,25 @@ function saveClass(item) {
     ${item.days} • ${item.time}<br>
     📍 ${item.location}
   `;
-  savedList.appendChild(savedItem);
+
+  // Create a Trash button inside the function
+  const removeBtn = document.createElement('button'); // <-- correct: 'button'
+  removeBtn.innerHTML = '🗑️'; // Trash icon
+  removeBtn.style.marginLeft = '10px';
+  removeBtn.style.backgroundColor = 'transparent';
+  removeBtn.style.border = 'none';
+  removeBtn.style.color = '#ff4d4d';
+  removeBtn.style.fontSize = '20px';
+  removeBtn.style.cursor = 'pointer';
+  removeBtn.style.verticalAlign = 'middle';
+
+  // When clicked, remove this <li> from the saved list
+  removeBtn.onclick = () => {
+    savedList.removeChild(savedItem);
+  };
+
+  savedItem.appendChild(removeBtn); // attach the trash button to the list item
+  savedList.appendChild(savedItem); // add the list item to the sidebar
 }
 
 
