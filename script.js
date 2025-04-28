@@ -44,7 +44,17 @@ toggleBtn.addEventListener('click', () => {
 //◀ ▶
 // Save a clicked class into sidebar
 function saveClass(item) {
+
+  //Implementation of CWE-400: Uncontrolled Resource Consumption (Resource Exhaustion) Fix
+  const MAX_SAVED_CLASSES = 10;
   const savedList = document.getElementById('savedList');
+
+  // Check how many classes are already saved
+  if (savedList.children.length >= MAX_SAVED_CLASSES) {
+    alert("You have reached the maximum number of saved classes (10).");
+    return; // Stop the function
+  }
+//-------------------------------------------------------------------------------------------
   const savedItem = document.createElement('li');
   savedItem.innerHTML = `
     <strong>${item.course} - ${item.professor}</strong><br>
@@ -53,8 +63,8 @@ function saveClass(item) {
   `;
 
   // Create a Trash button inside the function
-  const removeBtn = document.createElement('button'); // <-- correct: 'button'
-  removeBtn.innerHTML = '🗑️'; // Trash icon
+  const removeBtn = document.createElement('button');
+  removeBtn.innerHTML = '🗑️';
   removeBtn.style.marginLeft = '10px';
   removeBtn.style.backgroundColor = 'transparent';
   removeBtn.style.border = 'none';
@@ -68,8 +78,8 @@ function saveClass(item) {
     savedList.removeChild(savedItem);
   };
 
-  savedItem.appendChild(removeBtn); // attach the trash button to the list item
-  savedList.appendChild(savedItem); // add the list item to the sidebar
+  savedItem.appendChild(removeBtn);
+  savedList.appendChild(savedItem);
 }
 
 
