@@ -157,7 +157,23 @@ document.getElementById('generateBtn').addEventListener('click', () => {
   */
 
   //TO-DO: backend logic, use user input to prompt AI to generate a schedule
-
+fetch('https://schedulesooner-backend.onrender.com/api/user-input/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ query: input }) // user input from textbox
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Backend response:', data);
+    // Example if backend sends a schedule array
+    // createSchedule(data.schedule);
+  })
+  .catch(error => {
+    console.error('Error sending input to backend:', error);
+    document.getElementById('suggestion').textContent = "Failed to connect to AI generator.";
+  });
   //For demo, we can use hardcoded example?
 
   //if user input is any variation of "morning" or "mornings", use morningSchedule
