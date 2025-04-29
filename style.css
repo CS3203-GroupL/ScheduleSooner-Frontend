@@ -141,9 +141,9 @@ body {
   .toggle-btn {
     position: fixed;
     top: 50%;
-    right: 0;
+    right: 30px;
     transform: translateY(-50%);
-    background-color: #007BFF;
+    background-color: #c26f6f;
     color: white;
     border: none;
     padding: 10px;
@@ -154,7 +154,7 @@ body {
   }
   
   .toggle-btn:hover {
-    background-color: #0056b3;
+    background-color: grey;
   }
  
   #previewPopup {
@@ -182,9 +182,6 @@ body {
     text-decoration: underline;
 }
 
-.schedule-item {
-    margin-bottom: 10px;
-}
 
 button {
     margin-right: 5px;
@@ -199,6 +196,79 @@ button {
 button:hover {
     background-color: #3077d1;
 }
+
+/* Add these new styles */
+.schedule-category {
+  margin-bottom: 20px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+}
+
+.schedule-category h2 {
+  color: white;
+  margin: 0 0 10px 0;
+  padding: 5px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.category-controls {
+  display: flex;
+  gap: 5px;
+}
+
+.category-controls button {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 2px 5px;
+  border-radius: 3px;
+}
+
+.category-controls button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.schedule-item {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 8px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+}
+
+.schedule-item:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.schedule-name {
+  margin: 0;
+  padding: 4px 0;
+}
+
+.schedule-buttons {
+  display: flex;
+  gap: 5px;
+  margin-top: 5px;
+}
+
+.schedule-buttons button {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  padding: 3px 8px;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+.schedule-buttons button:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+
 
   
   

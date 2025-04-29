@@ -11,6 +11,17 @@ document.addEventListener("DOMContentLoaded", function () {
         created: []
     };
 
+    // Normalize the keys of the schedules object to lowercase
+    const normalizedSchedules = {};
+    Object.keys(schedules).forEach(key => {
+        const lowerKey = key.toLowerCase();
+        if (!normalizedSchedules[lowerKey]) {
+            normalizedSchedules[lowerKey] = [];
+        }
+        normalizedSchedules[lowerKey] = normalizedSchedules[lowerKey].concat(schedules[key]);
+    });
+    schedules = normalizedSchedules;
+
     let customCategories = JSON.parse(localStorage.getItem("customCategories")) || [];
     let activeCategory = "created";
 
@@ -44,30 +55,146 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function displaySchedules(category) {
+        category = category.toLowerCase(); // Normalize case
         activeCategory = category;
-        scheduleList.innerHTML = "";
-
-        if (schedules[category]) {
-            schedules[category].forEach((schedule, index) => {
-                const div = document.createElement("div");
-                div.classList.add("schedule-item");
-                div.style.marginBottom = "10px";
-                div.innerHTML = `
-                    <p class="schedule-name" style="cursor: pointer; text-decoration: underline;">${schedule.name}</p>
-                    <button>Edit</button>
-                    <button>Delete</button>
-                `;
-
-                const [nameEl, editBtn, deleteBtn] = div.children;
-                nameEl.addEventListener("click", () => openPreview(schedule.name));
-                editBtn.addEventListener("click", () => editSchedule(index, category));
-                deleteBtn.addEventListener("click", () => deleteSchedule(index, category));
-
-                scheduleList.appendChild(div);
-            });
-        }
+        scheduleList.innerHTML = "";  // Clear previous content
+    
+        // Always render Saved Schedules (even if empty)
+        renderCategory("created", "Saved Schedules");
+    
+        // Always render Favorites (even if empty)
+        renderCategory("favorites", "Favorites");
+    
+        // Render Custom Categories (even if empty)
+        customCategories.forEach((catName) => {
+            renderCategory(catName, capitalizeFirstLetter(catName));
+        });
     }
-
+    
+    function renderCategory(categoryKey, headerTitle) {
+        const categoryWrapper = document.createElement("div");
+        categoryWrapper.classList.add("schedule-category");
+    
+        // Create category heading with optional edit/delete for custom categories
+        const categoryHeaderWrapper = document.createElement("div");
+        categoryHeaderWrapper.style.display = "flex";
+        categoryHeaderWrapper.style.alignItems = "center";
+        categoryHeaderWrapper.style.justifyContent = "space-between";
+        categoryHeaderWrapper.style.marginBottom = "6px";
+    
+        const categoryHeader = document.createElement("h2");
+        categoryHeader.textContent = headerTitle;
+    
+        categoryHeaderWrapper.appendChild(categoryHeader);
+    
+        if (!["created", "favorites"].includes(categoryKey)) {
+            const catBtnWrapper = document.createElement("div");
+            catBtnWrapper.style.display = "flex";
+            catBtnWrapper.style.gap = "5px";
+    
+            const editCatBtn = document.createElement("button");
+            editCatBtn.textContent = "Edit";
+            editCatBtn.style.fontSize = "12px";
+            editCatBtn.addEventListener("click", () => {
+                const newName = prompt("Rename category:", categoryKey);
+                if (newName && newName.trim() !== "") {
+                    const newKey = newName.trim().toLowerCase();
+                    if (!schedules[newKey]) {
+                        schedules[newKey] = schedules[categoryKey];
+                        delete schedules[categoryKey];
+    
+                        const index = customCategories.indexOf(categoryKey);
+                        if (index !== -1) {
+                            customCategories[index] = newKey;
+                        }
+    
+                        saveToLocalStorage();
+                        displaySchedules(activeCategory);
+                    } else {
+                        alert("A category with that name already exists.");
+                    }
+                }
+            });
+    
+            const deleteCatBtn = document.createElement("button");
+            deleteCatBtn.textContent = "Delete";
+            deleteCatBtn.style.fontSize = "12px";
+            deleteCatBtn.addEventListener("click", () => {
+                if (confirm(`Delete category "${categoryKey}" and all schedules in it?`)) {
+                    delete schedules[categoryKey];
+                    customCategories = customCategories.filter(c => c !== categoryKey);
+                    saveToLocalStorage();
+                    displaySchedules(activeCategory);
+                }
+            });
+    
+            catBtnWrapper.appendChild(editCatBtn);
+            catBtnWrapper.appendChild(deleteCatBtn);
+            categoryHeaderWrapper.appendChild(catBtnWrapper);
+        }
+    
+        categoryWrapper.appendChild(categoryHeaderWrapper);
+    
+        if (schedules[categoryKey] && schedules[categoryKey].length > 0) {
+            schedules[categoryKey].forEach((schedule, index) => {
+                const div = createScheduleItem(schedule, index, categoryKey);
+                categoryWrapper.appendChild(div);
+            });
+        } else {
+            const placeholder = document.createElement("p");
+            placeholder.textContent = "No schedules yet.";
+            placeholder.style.fontStyle = "italic";
+            categoryWrapper.appendChild(placeholder);
+        }
+    
+        scheduleList.appendChild(categoryWrapper);
+    }
+    
+    
+    
+    function createScheduleItem(schedule, index, category) {
+        const div = document.createElement("div");
+        div.classList.add("schedule-item");
+        
+        const nameEl = document.createElement("p");
+        nameEl.classList.add("schedule-name");
+        nameEl.textContent = schedule.name;
+        
+        const buttonsDiv = document.createElement("div");
+        buttonsDiv.classList.add("schedule-buttons");
+        
+        const editBtn = document.createElement("button");
+        editBtn.textContent = "Edit";
+        editBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            editSchedule(index, category);
+        });
+        
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "Delete";
+        deleteBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            deleteSchedule(index, category);
+        });
+        
+        buttonsDiv.appendChild(editBtn);
+        buttonsDiv.appendChild(deleteBtn);
+        
+        nameEl.addEventListener("click", () => openPreview(schedule.name));
+        
+        div.appendChild(nameEl);
+        div.appendChild(buttonsDiv);
+        
+        return div;
+    }
+    
+    function capitalizeFirstLetter(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+    
+    
+    
+    
     function openPreview(title) {
         previewPopup.innerHTML = `
             <h2>${title}</h2>
@@ -98,32 +225,22 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    function renderCategoryHeading(catName) {
+    /*function renderCategoryHeading(catName) {
         const wrapper = document.createElement("div");
-        wrapper.style.display = "flex";
-        wrapper.style.alignItems = "center";
-        wrapper.style.justifyContent = "space-between";
-        wrapper.style.marginBottom = "8px";
-        wrapper.style.padding = "4px 6px";
-        wrapper.style.borderRadius = "6px";
-        wrapper.style.transition = "background-color 0.2s";
-
+        wrapper.classList.add("schedule-category");
+        
         const heading = document.createElement("h2");
-        heading.textContent = catName;
+        heading.textContent = capitalizeFirstLetter(catName);
         heading.style.cursor = "pointer";
-        heading.style.margin = "0";
-        heading.style.fontSize = "16px";
-        heading.addEventListener("click", () => displaySchedules(catName));
-
+        
         const controlsWrapper = document.createElement("div");
-        controlsWrapper.style.display = "none";
-        controlsWrapper.style.gap = "4px";
-
+        controlsWrapper.classList.add("category-controls");
+        
         const editBtn = document.createElement("button");
+        editBtn.innerHTML = "✏️";
         editBtn.title = "Edit category name";
-        editBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#666" viewBox="0 0 24 24"><path d="M5 21h14v-2H5v2zm3.293-5.293L17.586 6.414a2 2 0 0 0 0-2.828l-1.172-1.172a2 2 0 0 0-2.828 0L4.293 11.707a1 1 0 0 0-.293.707V17a1 1 0 0 0 1 1h4.586a1 1 0 0 0 .707-.293z"/></svg>`;
-        styleIconButton(editBtn);
-        editBtn.addEventListener("click", () => {
+        editBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
             const newName = prompt("Rename category:", catName);
             if (newName && newName.trim() !== "" && newName !== catName) {
                 const newCat = newName.trim().toLowerCase();
@@ -140,12 +257,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 displaySchedules(newCat);
             }
         });
-
+    
         const deleteBtn = document.createElement("button");
+        deleteBtn.innerHTML = "🗑️";
         deleteBtn.title = "Delete category";
-        deleteBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#c00" viewBox="0 0 24 24"><path d="M9 3v1H4v2h1v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1V4h-5V3H9zm2 4h2v12h-2V7z"/></svg>`;
-        styleIconButton(deleteBtn);
-        deleteBtn.addEventListener("click", () => {
+        deleteBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
             if (confirm(`Delete category "${catName}" and all schedules in it?`)) {
                 delete schedules[catName];
                 customCategories = customCategories.filter(c => c !== catName);
@@ -155,24 +272,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 displaySchedules("created");
             }
         });
-
+    
         controlsWrapper.appendChild(editBtn);
         controlsWrapper.appendChild(deleteBtn);
-
-        wrapper.addEventListener("mouseenter", () => {
-            wrapper.style.backgroundColor = "#e0e0e0";
-            controlsWrapper.style.display = "flex";
-        });
-        wrapper.addEventListener("mouseleave", () => {
-            wrapper.style.backgroundColor = "transparent";
-            controlsWrapper.style.display = "none";
-        });
-
+        
+        heading.addEventListener("click", () => displaySchedules(catName));
+        
         wrapper.appendChild(heading);
         wrapper.appendChild(controlsWrapper);
         customCategoriesContainer.appendChild(wrapper);
     }
-
+    */
     function styleIconButton(btn) {
         btn.style.background = "none";
         btn.style.border = "none";
@@ -212,7 +322,7 @@ document.addEventListener("DOMContentLoaded", function () {
     
         document.getElementById("saveScheduleInCategoryBtn").addEventListener("click", function () {
             const scheduleName = document.getElementById("scheduleNameInput").value.trim();
-            const selectedCategory = document.getElementById("categoryDropdown").value;
+            const selectedCategory = document.getElementById("categoryDropdown").value.toLowerCase(); // Normalize here
     
             if (!scheduleName) {
                 alert("Schedule name cannot be empty.");
@@ -240,21 +350,26 @@ document.addEventListener("DOMContentLoaded", function () {
             }
     
             saveToLocalStorage();
+            console.log("Updated schedules:", schedules);
             displaySchedules(selectedCategory || "created");
             customPopup.remove();
         });
     });
     
-    
-
-    document.getElementById("createCategoryBtn").addEventListener("click", function () {
+    document.getElementById("createCategoryBtn").addEventListener("click", function() {
         const newCategoryName = prompt("Enter a name for the new custom category:");
         if (newCategoryName && newCategoryName.trim() !== "") {
             const lowerCaseName = newCategoryName.trim().toLowerCase();
             if (!customCategories.includes(lowerCaseName)) {
                 customCategories.push(lowerCaseName);
-                renderCategoryHeading(lowerCaseName);
+                // Initialize an empty array for this category
+                schedules[lowerCaseName] = schedules[lowerCaseName] || [];
+                
+                // Save to storage
                 saveToLocalStorage();
+                
+                // Refresh the display
+                displaySchedules(activeCategory); // This will now show the new category
             } else {
                 alert("This category already exists.");
             }
@@ -277,5 +392,5 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Initial render
     displaySchedules("created");
-    customCategories.forEach(renderCategoryHeading);
+    //customCategories.forEach(renderCategoryHeading);
 });
