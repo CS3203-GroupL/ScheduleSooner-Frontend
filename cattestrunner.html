@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ScheduleSooner Tests</title>
+    <!-- Include your CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Include your existing HTML structure -->
+    <div class="container">
+                        <html lang="en">
+                        <head>
+                        <meta charset="UTF-8" /> 
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
+                        <title>ScheduleSooner Dashboard</title> 
+                        <link rel="stylesheet" href="style.css" /> 
+                        </head>
+                        <body>
+                        <div class="container">
+                            <header>
+                            <h1>Welcome to ScheduleSooner</h1> 
+                            <button id="faqBtn">FAQ / Help</button> <!-- Opens FAQ modal -->
+                            </header>
+
+                            <main>
+                            <!-- Label and input box for scheduling preferences -->
+                            <label for="preferences">Enter your preferences:</label>
+                            <input type="text" id="preferences" placeholder="e.g., Mornings, Dr. Abdulhak" />
+
+                            <!-- Generate schedule button -->
+                            <button id="generateBtn">Generate Schedule</button>
+
+                            <!-- Shows user input -->
+                            <p id="suggestion" class="suggestion-text"></p>
+
+                            <!-- Section for displaying the schedule -->
+                            <section id="scheduleViewer">
+                                <h2>Your AI-Generated Schedule</h2>
+                                <ul id="scheduleList"></ul> <!-- Classes will be listed here -->
+                            </section>
+                            </main>
+                        </div>
+
+                        <!-- Modal for FAQs/ instructions -->
+                        <div id="faqModal" class="modal">
+                            <div class="modal-content">
+                            <span class="close">&times;</span> <!-- Close modal button -->
+                            <h2>FAQ</h2>
+                            <p>Enter your scheduling preferences above and click generate to see suggestions.</p>
+                            </div>
+                        </div>
+
+                        <!-- Saved Classes Sidebar -->
+                        <div id="savedSidebar" class="sidebar">
+                        <h2>Saved Classes</h2>
+                        <ul id="savedList"></ul> <!-- List of saved individual classes -->
+
+                        <button id="saveScheduleBtn">Save Schedule</button>
+
+                        <div id="savedScheduleList"></div>
+
+                        <div id="favoriteList"></div>
+
+                        <!-- ✅ Custom categories will render here -->
+                        <div id="customCategories"></div>
+
+                        <!-- Add Custom Category Button -->
+                        <button id="createCategoryBtn">+ Create Custom Category</button>
+                        </div>
+
+
+                        <!-- Small floating toggle button -->
+                        <button id="toggleSavedBtn" class="toggle-btn">▶</button>
+
+
+
+                        <!-- JavaScript file for schedule viewer component -->
+                        <script src="script.js"></script>
+                        <script src="categoryscript.js"></script>
+                        </body>
+                        </html>
+
+    </div>
+
+    <!-- Include your main script -->
+    <script src="categoryscript.js"></script>
+    
+    <!-- Include the test script -->
+    <script src="cattestfinal.js"></script>
+</body>
+</html>
