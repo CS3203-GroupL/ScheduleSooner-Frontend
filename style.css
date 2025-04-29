@@ -141,9 +141,9 @@ body {
   .toggle-btn {
     position: fixed;
     top: 50%;
-    right: 0;
+    right: 30px;
     transform: translateY(-50%);
-    background-color: #007BFF;
+    background-color: #c26f6f;
     color: white;
     border: none;
     padding: 10px;
@@ -154,7 +154,7 @@ body {
   }
   
   .toggle-btn:hover {
-    background-color: #0056b3;
+    background-color: grey;
   }
  
   #previewPopup {
@@ -267,6 +267,8 @@ button:hover {
 .schedule-buttons button:hover {
   background: rgba(255, 255, 255, 0.3);
 }
+
+
 
   
   
