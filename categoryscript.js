@@ -225,7 +225,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    function renderCategoryHeading(catName) {
+    /*function renderCategoryHeading(catName) {
         const wrapper = document.createElement("div");
         wrapper.classList.add("schedule-category");
         
@@ -282,7 +282,7 @@ document.addEventListener("DOMContentLoaded", function () {
         wrapper.appendChild(controlsWrapper);
         customCategoriesContainer.appendChild(wrapper);
     }
-
+    */
     function styleIconButton(btn) {
         btn.style.background = "none";
         btn.style.border = "none";
@@ -362,13 +362,14 @@ document.addEventListener("DOMContentLoaded", function () {
             const lowerCaseName = newCategoryName.trim().toLowerCase();
             if (!customCategories.includes(lowerCaseName)) {
                 customCategories.push(lowerCaseName);
-                // Initialize an empty array for this category if it doesn't exist
-                if (!schedules[lowerCaseName]) {
-                    schedules[lowerCaseName] = [];
-                }
-                // Render the heading immediately
-                renderCategoryHeading(lowerCaseName);
+                // Initialize an empty array for this category
+                schedules[lowerCaseName] = schedules[lowerCaseName] || [];
+                
+                // Save to storage
                 saveToLocalStorage();
+                
+                // Refresh the display
+                displaySchedules(activeCategory); // This will now show the new category
             } else {
                 alert("This category already exists.");
             }
@@ -391,5 +392,5 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Initial render
     displaySchedules("created");
-    customCategories.forEach(renderCategoryHeading);
+    //customCategories.forEach(renderCategoryHeading);
 });
