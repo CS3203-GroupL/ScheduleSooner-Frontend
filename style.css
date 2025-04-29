@@ -186,7 +186,7 @@ body {
 button {
     margin-right: 5px;
     padding: 5px 10px;
-    background-color: #3a8bfc;
+    background-color: rgb(110, 110, 110);
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -194,7 +194,7 @@ button {
 }
 
 button:hover {
-    background-color: #3077d1;
+    background-color: #c26f6f;
 }
 
 /* Add these new styles */
@@ -267,6 +267,4 @@ button:hover {
 .schedule-buttons button:hover {
   background: rgba(255, 255, 255, 0.3);
 }
-
-
 
