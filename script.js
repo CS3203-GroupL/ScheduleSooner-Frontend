@@ -158,10 +158,10 @@ document.getElementById('generateBtn').addEventListener('click', () => {
   */
 
 // Poll for generated schedule from server
-const url = 'hhttps://schedulesooner-backend.onrender.com/api/download-file?filename=final_schedule.json';
+const url = 'hhttp://127.0.0.1:8000/api/download-file?filename=final_schedule.json';
   
-  function pollForSchedule(timeoutMs = 40000, intervalMs = 3000) {
-    const url = 'https://schedulesooner-backend.onrender.com/api/download-file?filename=final_schedule.json';
+  function pollForSchedule(timeoutMs = 90000, intervalMs = 3000) {
+    const url = 'http://127.0.0.1:8000/api/download-file?filename=final_schedule.json';
     const start = Date.now();
   
     console.log("📡 Starting poll loop...");
@@ -223,7 +223,7 @@ const url = 'hhttps://schedulesooner-backend.onrender.com/api/download-file?file
   else {
         //TO-DO: backend logic, use user input to prompt AI to generate a schedule
   console.log("📤 Sending query:", input);
-  fetch('https://schedulesooner-backend.onrender.com/api/user-input/', {
+  fetch('http://127.0.0.1:8000/api/user-input/', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ query: input })
@@ -231,7 +231,7 @@ const url = 'hhttps://schedulesooner-backend.onrender.com/api/download-file?file
   .then(response => {
     if (!response.ok) throw new Error("Failed to send user input");
     document.getElementById('suggestion').textContent = `Suggested based on: "${input}"`;
-    return pollForSchedule(60000);  // Wait up to 40s
+    return pollForSchedule(90000);  // Wait up to 40s
   })
   .then(data => {
     const formatted = data.map(item => ({
@@ -250,32 +250,6 @@ const url = 'hhttps://schedulesooner-backend.onrender.com/api/download-file?file
   }
 
 });
-
-function pollForSchedule(timeoutMs = 60000, intervalMs = 3000) {
-  const url = 'https://schedulesooner-backend.onrender.com/api/download-file?filename=final_schedule.json';
-
-  const startTime = Date.now();
-
-  return new Promise((resolve, reject) => {
-    function tryFetch() {
-      fetch(url)
-        .then(response => {
-          if (!response.ok) throw new Error("Not ready");
-          return response.json();
-        })
-        .then(data => resolve(data))
-        .catch(() => {
-          if (Date.now() - startTime >= timeoutMs) {
-            reject(new Error("Schedule generation timed out"));
-          } else {
-            setTimeout(tryFetch, intervalMs);
-          }
-        });
-    }
-
-    tryFetch(); // Start polling
-  });
-}
 
 // FAQ modal functionality
 const modal = document.getElementById('faqModal'); // The modal container
