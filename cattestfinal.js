@@ -137,40 +137,81 @@ function testCategoryCreation() {
 }
 
 // Test 3: Verify schedule creation
+// Test 3: Verify schedule creation
 function testScheduleCreation() {
     console.log("Testing schedule creation...");
     
+    // First create a test class to add to the schedule
+    const testClass = {
+        course: "TEST 101",
+        professor: "Professor Test",
+        days: "MWF",
+        time: "10:00 AM - 11:15 AM",
+        location: "Test Hall 101"
+    };
+    
+    // Simulate adding the class to the saved list
+    const savedList = document.getElementById('savedList');
+    if (savedList) {
+        const li = document.createElement('li');
+        li.innerHTML = `
+            <strong>${testClass.course} - ${testClass.professor}</strong><br>
+            ${testClass.days} • ${testClass.time}<br>
+            📍 ${testClass.location}
+        `;
+        savedList.appendChild(li);
+        console.log("✔ Test class added to saved list");
+    } else {
+        console.error("✖ Couldn't find savedList element");
+        return;
+    }
+    
     // Test creating a new schedule
     const testScheduleName = "Test Schedule " + Date.now();
-    window.prompt = () => testScheduleName; // Mock prompt for save
     
+    // Mock prompt and other UI interactions
+    window.prompt = () => testScheduleName;
+    
+    // Simulate the save schedule flow
     simulateClick("saveScheduleBtn");
-    simulateInput("scheduleNameInput", testScheduleName);
-    simulateClick("saveScheduleInCategoryBtn");
     
-    // Verify schedule was created
-    const schedules = JSON.parse(localStorage.getItem("schedules"));
-    const createdSchedules = schedules.created;
-    
-    const scheduleExists = createdSchedules.some(s => s.name === testScheduleName);
-    
-    if (scheduleExists) {
-        console.log("✔ Schedule added to created schedules");
-    } else {
-        console.error("✖ Schedule not added to created schedules");
-    }
-    
-    // Verify UI shows the new schedule
-    const scheduleElements = document.querySelectorAll(".schedule-name");
-    const uiScheduleExists = Array.from(scheduleElements).some(el => 
-        el.textContent === testScheduleName
-    );
-    
-    if (uiScheduleExists) {
-        console.log("✔ New schedule appears in UI");
-    } else {
-        console.error("✖ New schedule doesn't appear in UI");
-    }
+    // Wait for the popup to appear (since it's async in the actual code)
+    setTimeout(() => {
+        simulateInput("scheduleNameInput", testScheduleName);
+        simulateClick("saveScheduleInCategoryBtn");
+        
+        // Verify schedule was created
+        const schedules = JSON.parse(localStorage.getItem("schedules"));
+        const createdSchedules = schedules.created;
+        
+        const scheduleExists = createdSchedules.some(s => s.name === testScheduleName);
+        
+        if (scheduleExists) {
+            console.log("✔ Schedule added to created schedules");
+            
+            // Verify the schedule has our test class
+            const newSchedule = createdSchedules.find(s => s.name === testScheduleName);
+            if (newSchedule.classes && newSchedule.classes.some(c => c.course === testClass.course)) {
+                console.log("✔ Schedule contains the test class");
+            } else {
+                console.error("✖ Schedule doesn't contain the test class");
+            }
+        } else {
+            console.error("✖ Schedule not added to created schedules");
+        }
+        
+        // Verify UI shows the new schedule
+        const scheduleElements = document.querySelectorAll(".schedule-name");
+        const uiScheduleExists = Array.from(scheduleElements).some(el => 
+            el.textContent === testScheduleName
+        );
+        
+        if (uiScheduleExists) {
+            console.log("✔ New schedule appears in UI");
+        } else {
+            console.error("✖ New schedule doesn't appear in UI");
+        }
+    }, 100); // Small delay to allow popup to render
 }
 
 // Test 4: Verify schedule editing
