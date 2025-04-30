@@ -160,37 +160,38 @@ document.getElementById('generateBtn').addEventListener('click', () => {
 // Poll for generated schedule from server
 const url = 'hhttps://schedulesooner-backend.onrender.com/api/download-file?filename=final_schedule.json';
   
-  function pollForSchedule(timeoutMs = 60000, intervalMs = 3000) {
-    const url = 'https://schedulesooner-backend.onrender.com/api/download-file?filename=final_schedule.json';
-    const start = Date.now();
-  
-    console.log("📡 Starting poll loop...");
-  
-    return new Promise((resolve, reject) => {
-      function check() {
-        console.log("🔁 Polling:", url);
-  
-        fetch(url)
-          .then(res => {
-            if (!res.ok) throw new Error("Still waiting...");
-            return res.json();
-          })
-          .then(data => {
-            console.log("✅ Schedule retrieved");
-            resolve(data);
-          })
-          .catch(err => {
-            if (Date.now() - start > timeoutMs) {
-              console.error("⏰ Polling timed out");
-              reject(err);
-            } else {
-              setTimeout(check, intervalMs);
-            }
-          });
-      }
-      check();
-    });
-  }
+function pollForSchedule(timeoutMs = 40000, intervalMs = 3000) {
+  const url = `https://schedulesooner-backend.onrender.com/api/download-file?filename=final_schedule.json&ts=${Date.now()}`;
+  const startTime = Date.now();
+
+  return new Promise((resolve, reject) => {
+    function tryFetch() {
+      fetch(url)
+        .then(response => {
+          if (response.status === 410) {
+            reject(new Error("Schedule already retrieved"));
+          } else if (!response.ok) {
+            throw new Error("Not ready");
+          }
+          return response.json();
+        })
+        .then(data => {
+          if (!Array.isArray(data)) {
+            throw new Error("Invalid schedule format");
+          }
+          resolve(data);
+        })
+        .catch(() => {
+          if (Date.now() - startTime >= timeoutMs) {
+            reject(new Error("Schedule generation timed out"));
+          } else {
+            setTimeout(tryFetch, intervalMs);
+          }
+        });
+    }
+    tryFetch();
+  });
+}
   
   
   //For demo, we can use hardcoded example?
@@ -252,7 +253,7 @@ const url = 'hhttps://schedulesooner-backend.onrender.com/api/download-file?file
 });
 
 function pollForSchedule(timeoutMs = 40000, intervalMs = 3000) {
-  const url = 'https://schedulesooner-backend.onrender.com/api/download-file?filename=final_schedule.json';
+  const url = `https://schedulesooner-backend.onrender.com/api/download-file?filename=final_schedule.json&ts=${Date.now()}`;
 
   const startTime = Date.now();
 
