@@ -139,6 +139,7 @@ const mockSchedule = [
     ];
 
 // When the "Generate Schedule" button is clicked:
+
 document.getElementById('generateBtn').addEventListener('click', () => {
   const input = document.getElementById('preferences').value; // Get user input
   const lowerInput = input.toLowerCase(); // Convert input to lowercase for case-insensitive comparison
@@ -156,24 +157,69 @@ document.getElementById('generateBtn').addEventListener('click', () => {
   This prevents the execution of any scripts or HTML tags.
   */
 
+// Poll for generated schedule from local server
+const url = 'hhttps://schedulesooner-backend.onrender.com/api/download-file?filename=final_schedule.json';
+
   //TO-DO: backend logic, use user input to prompt AI to generate a schedule
-fetch('https://schedulesooner-backend.onrender.com/api/user-input/', {
+  console.log("📤 Sending query:", input);
+  fetch('https://schedulesooner-backend.onrender.com/api/user-input/', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ query: input }) // user input from textbox
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ query: input })
   })
-  .then(response => response.json())
+  .then(response => {
+    if (!response.ok) throw new Error("Failed to send user input");
+    document.getElementById('suggestion').textContent = `Suggested based on: "${input}"`;
+    return pollForSchedule(40000);  // Wait up to 40s
+  })
   .then(data => {
-    console.log('Backend response:', data);
-    // Example if backend sends a schedule array
-    // createSchedule(data.schedule);
+    const formatted = data.map(item => ({
+      course: `${item.subject} ${item.course}: ${item.title}`,
+      days: item.meeting_days,
+      time: item.meeting_time,
+      location: item.meeting_location,
+      professor: item.instructor + (item.seats ? ` (${item.seats})` : "")
+    }));
+    createSchedule(formatted);
   })
   .catch(error => {
-    console.error('Error sending input to backend:', error);
-    document.getElementById('suggestion').textContent = "Failed to connect to AI generator.";
+    console.error("Error:", error);
+    document.getElementById('suggestion').textContent = "Failed to generate schedule.";
   });
+  
+  function pollForSchedule(timeoutMs = 40000, intervalMs = 3000) {
+    const url = 'https://schedulesooner-backend.onrender.com/api/download-file?filename=final_schedule.json';
+    const start = Date.now();
+  
+    console.log("📡 Starting poll loop...");
+  
+    return new Promise((resolve, reject) => {
+      function check() {
+        console.log("🔁 Polling:", url);
+  
+        fetch(url)
+          .then(res => {
+            if (!res.ok) throw new Error("Still waiting...");
+            return res.json();
+          })
+          .then(data => {
+            console.log("✅ Schedule retrieved");
+            resolve(data);
+          })
+          .catch(err => {
+            if (Date.now() - start > timeoutMs) {
+              console.error("⏰ Polling timed out");
+              reject(err);
+            } else {
+              setTimeout(check, intervalMs);
+            }
+          });
+      }
+      check();
+    });
+  }
+  
+  
   //For demo, we can use hardcoded example?
 
   //if user input is any variation of "morning" or "mornings", use morningSchedule
@@ -201,11 +247,33 @@ fetch('https://schedulesooner-backend.onrender.com/api/user-input/', {
     createSchedule(drAbdulhakSchedule);
   }
 
-  //if user input is any variation of "random" or "random classes", use randomSchedule
-  else {
-    createSchedule(mockSchedule); 
-  }
 });
+
+function pollForSchedule(timeoutMs = 40000, intervalMs = 3000) {
+  const url = 'https://schedulesooner-backend.onrender.com/api/download-file?filename=final_schedule.json';
+
+  const startTime = Date.now();
+
+  return new Promise((resolve, reject) => {
+    function tryFetch() {
+      fetch(url)
+        .then(response => {
+          if (!response.ok) throw new Error("Not ready");
+          return response.json();
+        })
+        .then(data => resolve(data))
+        .catch(() => {
+          if (Date.now() - startTime >= timeoutMs) {
+            reject(new Error("Schedule generation timed out"));
+          } else {
+            setTimeout(tryFetch, intervalMs);
+          }
+        });
+    }
+
+    tryFetch(); // Start polling
+  });
+}
 
 // FAQ modal functionality
 const modal = document.getElementById('faqModal'); // The modal container
