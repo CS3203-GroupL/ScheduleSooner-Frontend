@@ -158,10 +158,10 @@ document.getElementById('generateBtn').addEventListener('click', () => {
   */
 
 // Poll for generated schedule from server
-const url = 'https://schedulesooner-backend.onrender.com/api/download-file?filename=final_schedule.json';
+const url = 'hhttp://127.0.0.1:8000/api/download-file?filename=final_schedule.json';
   
   function pollForSchedule(timeoutMs = 40000, intervalMs = 3000) {
-    const url = 'https://schedulesooner-backend.onrender.com/api/download-file?filename=final_schedule.json';
+    const url = 'http://127.0.0.1:8000/api/download-file?filename=final_schedule.json';
     const start = Date.now();
   
     console.log("📡 Starting poll loop...");
@@ -223,7 +223,7 @@ const url = 'https://schedulesooner-backend.onrender.com/api/download-file?filen
   else {
         //TO-DO: backend logic, use user input to prompt AI to generate a schedule
   console.log("📤 Sending query:", input);
-  fetch('https://schedulesooner-backend.onrender.com/api/user-input/', {
+  fetch('http://127.0.0.1:8000/api/user-input/', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ query: input })
@@ -252,7 +252,7 @@ const url = 'https://schedulesooner-backend.onrender.com/api/download-file?filen
 });
 
 function pollForSchedule(timeoutMs = 40000, intervalMs = 3000) {
-  const url = 'https://schedulesooner-backend.onrender.com/api/download-file?filename=final_schedule.json';
+  const url = 'http://127.0.0.1:8000/api/download-file?filename=final_schedule.json';
 
   const startTime = Date.now();
 
