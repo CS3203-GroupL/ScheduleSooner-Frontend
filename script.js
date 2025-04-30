@@ -231,7 +231,7 @@ const url = 'hhttps://schedulesooner-backend.onrender.com/api/download-file?file
   .then(response => {
     if (!response.ok) throw new Error("Failed to send user input");
     document.getElementById('suggestion').textContent = `Suggested based on: "${input}"`;
-    return pollForSchedule(40000);  // Wait up to 40s
+    return pollForSchedule(60000);  // Wait up to 40s
   })
   .then(data => {
     const formatted = data.map(item => ({
@@ -251,7 +251,7 @@ const url = 'hhttps://schedulesooner-backend.onrender.com/api/download-file?file
 
 });
 
-function pollForSchedule(timeoutMs = 40000, intervalMs = 3000) {
+function pollForSchedule(timeoutMs = 60000, intervalMs = 3000) {
   const url = 'https://schedulesooner-backend.onrender.com/api/download-file?filename=final_schedule.json';
 
   const startTime = Date.now();
