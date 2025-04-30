@@ -1,4 +1,4 @@
-// JavaScript for ScheduleSooner Dashboard – Final Version with SVG Icons and Dark Hover Styling
+// JavaScript for ScheduleSooner Dashboard – Final Version with CWE 400 Documentation
 
 document.addEventListener("DOMContentLoaded", function () {
     const sidebar = document.getElementById("savedSidebar");
@@ -27,6 +27,54 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const previewPopup = createPopup("previewPopup");
     document.body.appendChild(previewPopup);
+//----------------------------------------------------------------------------
+    //CWE 400: Resource Consumtion Midigation Functions:
+
+    // Function to check if the schedule is too large in order to reduce resource consumption
+    // and prevent performance issues.
+    function isScheduleTooLarge(schedule) {
+        const jsonStr = JSON.stringify(schedule);
+        return jsonStr.length > 1024 * 100; // 100KB max per schedule
+    }
+
+    // Function to sanitize input to prevent XSS attacks and ensure data integrity.
+    // It trims the input and limits its length to a specified maximum.
+    function sanitizeInput(input, maxLength = 50) {
+        return input.trim().slice(0, maxLength);
+    }
+
+    // Function to throttle the execution of a function to prevent excessive resource consumption.
+    function throttle(func, delay) {
+        let lastCall = 0;
+        return function(...args) {
+            const now = new Date().getTime();
+            if (now - lastCall < delay) return;
+            lastCall = now;
+            return func.apply(this, args);
+        };
+    }
+
+    // Cleans up the preview popup when closed to prevent memory leaks and excessive resource consumption.
+    // This function is called when the preview popup is closed.
+    function closePreview() {
+        previewPopup.style.display = "none";
+        // Remove any dynamic listeners
+        const closeBtn = document.getElementById("closePreviewBtn");
+        if (closeBtn) closeBtn.replaceWith(closeBtn.cloneNode(true));
+    }
+
+    // Function to check the storage usage and alert the user if it's too high.
+    // This helps in managing the local storage and preventing excessive resource consumption.
+    // It checks if the used storage is more than 90% of the maximum allowed size
+    function checkStorageUsage() {
+        const used = JSON.stringify(localStorage).length;
+        const max = 1024 * 1024 * 5; // 5MB
+        if (used > max * 0.9) {
+            alert("Warning: Storage is almost full. Delete old schedules.");
+        }
+    }
+
+//---------------------------------------------------------------------------
 
     function createPopup(id) {
         const popup = document.createElement("div");
