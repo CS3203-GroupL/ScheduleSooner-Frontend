@@ -95,42 +95,45 @@
   </div>
 
   <script>
-    async function checkLogin() {
-      //grab text from input fields
-      const username = document.getElementById("username").value.trim();
-      const password = document.getElementById("password").value.trim();
-      const errorMsg = document.getElementById("error-msg");
-  
+    //general function to check credentials to use before tasks
+    async function checkCredentials(username, password) {
       try {
-        //send post request
         const response = await fetch('https://schedulesooner-backend.onrender.com/api/login/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json' 
           },
-          //turn input into json to send
-          body: JSON.stringify({
-            username: username,
-            password: password
-          })
+          //create json to send to the backend
+          body: JSON.stringify({ username, password })
         });
-        //send to sign in if login is ok
+  
         if (response.ok) {
           const data = await response.json();
-          console.log('Login successful:', data);
-  
-          window.location.href = "scheduleCreation.html";
+          return { success: true, data };
         } else {
           const errorData = await response.json();
-          console.error('Login failed:', errorData);
-  
-          
-          errorMsg.textContent = errorData.detail || "Invalid username or password. Please try again.";
+          return { success: false, message: errorData.detail || "Invalid credentials." };
         }
       } catch (error) {
-        console.error('Error during login:', error);
-        errorMsg.textContent = "An error occurred. Please try again later.";
+        console.error('Error in checkCredentials:', error);
+        return { success: false, message: "An error occurred. Please try again later." };
+      }
+    }
+  
+    async function checkLogin() {
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const errorMsg = document.getElementById("error-msg");
+  
+      const result = await checkCredentials(username, password);
+  
+      if (result.success) {
+        console.log('Login successful:', result.data);
+        window.location.href = "scheduleCreation.html";
+      } else {
+        console.error('Login failed:', result.message);
+        errorMsg.textContent = result.message;
       }
     }
   </script>
