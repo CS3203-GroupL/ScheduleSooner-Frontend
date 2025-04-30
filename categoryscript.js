@@ -196,15 +196,53 @@ document.addEventListener("DOMContentLoaded", function () {
     
     
     function openPreview(title) {
-        previewPopup.innerHTML = `
-            <h2>${title}</h2>
-            <p>(Schedule details can go here later!)</p>
-            <button id="closePreviewBtn" style="margin-top:10px;">Close</button>
+        // Find the schedule in all categories
+        let scheduleDetails = null;
+        for (const category in schedules) {
+            const foundSchedule = schedules[category].find(s => s.name === title);
+            if (foundSchedule) {
+                scheduleDetails = foundSchedule;
+                break;
+            }
+        }
+    
+        // Create the popup content
+        let popupHTML = `
+            <div style="max-width: 400px;">
+                <h2 style="margin-bottom: 15px;">${title}</h2>
+                <div class="schedule-details" style="max-height: 400px; overflow-y: auto;">
         `;
+    
+        if (scheduleDetails && scheduleDetails.classes) {
+            scheduleDetails.classes.forEach(classItem => {
+                popupHTML += `
+                    <div style="margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #eee;">
+                        <strong>${classItem.course} - ${classItem.professor}</strong><br>
+                        ${classItem.days} • ${classItem.time}<br>
+                        📍 ${classItem.location}
+                    </div>
+                `;
+            });
+        } else {
+            popupHTML += `<p>No class details available for this schedule.</p>`;
+        }
+    
+        popupHTML += `
+                </div>
+                <button id="closePreviewBtn" 
+                        style="margin-top: 15px; padding: 8px 15px; 
+                               background: #808080; border: 1px solid #ddd; 
+                               border-radius: 4px; cursor: pointer;">
+                    Close
+                </button>
+            </div>
+        `;
+    
+        previewPopup.innerHTML = popupHTML;
         previewPopup.style.display = "block";
-
-        document.getElementById("closePreviewBtn").addEventListener("click", () => {
-            previewPopup.style.display = "none";
+    
+        document.getElementById('closePreviewBtn').addEventListener('click', () => {
+            previewPopup.style.display = 'none';
         });
     }
 
@@ -294,6 +332,24 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     document.getElementById("saveScheduleBtn").addEventListener("click", function () {
+        // First collect all the saved classes from the sidebar
+        const savedClasses = Array.from(document.getElementById('savedList').children).map(li => {
+            const text = li.textContent;
+            return {
+                course: li.querySelector('strong').textContent.split(' - ')[0],
+                professor: li.querySelector('strong').textContent.split(' - ')[1],
+                days: text.split('•')[0].split('\n')[1].trim(),
+                time: text.split('•')[1].split('📍')[0].trim(),
+                location: text.split('📍')[1].trim()
+            };
+        });
+    
+        if (savedClasses.length === 0) {
+            alert("No classes have been saved to this schedule yet!");
+            return;
+        }
+    
+        // Now show the category management popup
         let existingPopup = document.getElementById("customPopup");
         if (existingPopup) existingPopup.remove();
     
@@ -322,17 +378,20 @@ document.addEventListener("DOMContentLoaded", function () {
     
         document.getElementById("saveScheduleInCategoryBtn").addEventListener("click", function () {
             const scheduleName = document.getElementById("scheduleNameInput").value.trim();
-            const selectedCategory = document.getElementById("categoryDropdown").value.toLowerCase(); // Normalize here
+            const selectedCategory = document.getElementById("categoryDropdown").value.toLowerCase();
     
             if (!scheduleName) {
                 alert("Schedule name cannot be empty.");
                 return;
             }
     
-            const newSchedule = { name: scheduleName };
+            const newSchedule = { 
+                name: scheduleName,
+                classes: savedClasses  // This is where we add the class details
+            };
     
             // Save to "created" (Saved Schedules)
-            schedules["created"].push({ ...newSchedule });
+            schedules["created"].push(newSchedule);
     
             // Save to selected category if applicable
             if (selectedCategory && selectedCategory !== "created") {
@@ -340,7 +399,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     schedules[selectedCategory] = [];
                 }
     
-                schedules[selectedCategory].push({ ...newSchedule });
+                schedules[selectedCategory].push(newSchedule);
     
                 // Track custom category if it's new
                 if (!["favorites"].includes(selectedCategory) && !customCategories.includes(selectedCategory)) {
@@ -350,9 +409,9 @@ document.addEventListener("DOMContentLoaded", function () {
             }
     
             saveToLocalStorage();
-            console.log("Updated schedules:", schedules);
             displaySchedules(selectedCategory || "created");
             customPopup.remove();
+            alert(`Schedule "${scheduleName}" saved successfully!`);
         });
     });
     
