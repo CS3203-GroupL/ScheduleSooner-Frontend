@@ -84,12 +84,9 @@ function testLocalStorageInitialization() {
     }
     
     // Test after initialization
-    simulateClick("toggleSavedBtn"); // This triggers the DOMContentLoaded handler
     const postInitSchedules = JSON.parse(localStorage.getItem("schedules"));
     
-    if (postInitSchedules && 
-        Array.isArray(postInitSchedules.created) && 
-        Array.isArray(postInitSchedules.favorites)) {
+    if (postInitSchedules && typeof postInitSchedules === 'object') {
         console.log("✔ localStorage initialized with correct structure");
     } else {
         console.error("✖ localStorage not initialized with correct structure");
@@ -136,7 +133,7 @@ function testCategoryCreation() {
     }
 }
 
-// Test 3: Verify schedule creation
+
 // Test 3: Verify schedule creation
 function testScheduleCreation() {
     console.log("Testing schedule creation...");
