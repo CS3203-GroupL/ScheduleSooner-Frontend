@@ -158,7 +158,7 @@ document.getElementById('generateBtn').addEventListener('click', () => {
   */
 
 // Poll for generated schedule from server
-const url = 'hhttps://schedulesooner-backend.onrender.com/api/download-file?filename=final_schedule.json';
+const url = 'https://schedulesooner-backend.onrender.com/api/download-file?filename=final_schedule.json';
   
   function pollForSchedule(timeoutMs = 40000, intervalMs = 3000) {
     const url = 'https://schedulesooner-backend.onrender.com/api/download-file?filename=final_schedule.json';
