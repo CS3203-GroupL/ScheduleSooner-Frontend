@@ -45,6 +45,7 @@ toggleBtn.addEventListener('click', () => {
 // Save a clicked class into sidebar
 function saveClass(item) {
 
+//-------------------------------------------------------------------------------------------
   //Implementation of CWE-400: Uncontrolled Resource Consumption (Resource Exhaustion) Fix
   const MAX_SAVED_CLASSES = 10;
   const savedList = document.getElementById('savedList');

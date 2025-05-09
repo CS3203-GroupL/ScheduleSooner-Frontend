@@ -37,12 +37,6 @@ document.addEventListener("DOMContentLoaded", function () {
         return jsonStr.length > 1024 * 100; // 100KB max per schedule
     }
 
-    // Function to sanitize input to prevent XSS attacks and ensure data integrity.
-    // It trims the input and limits its length to a specified maximum.
-    function sanitizeInput(input, maxLength = 50) {
-        return input.trim().slice(0, maxLength);
-    }
-
     // Function to throttle the execution of a function to prevent excessive resource consumption.
     function throttle(func, delay) {
         let lastCall = 0;
